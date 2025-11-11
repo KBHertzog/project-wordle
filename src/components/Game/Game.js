@@ -5,6 +5,7 @@ import { WORDS } from "../../data";
 
 import GuessInput from "../GuessInput";
 import GuessHistory from "../GuessHistory/GuessHistory";
+import GameStateBanner from "../GameStateBanner/GameStateBanner";
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -14,9 +15,12 @@ console.info({ answer });
 function Game() {
   const [guessHistory, setGuessHistory] = React.useState([]);
 
+  const hasWon = guessHistory.includes(answer);
+  const isGameOver = guessHistory.length >= 6 || hasWon;
   return (
     <>
-      <GuessHistory guesses={guessHistory} />
+      {isGameOver && <GameStateBanner hasWon={hasWon} answer={answer}/>}
+      <GuessHistory guesses={guessHistory} answer={answer} />
       <GuessInput
         onGuess={(guess) => {
           if (guessHistory.includes(guess)) {
@@ -25,6 +29,7 @@ function Game() {
           }
           setGuessHistory([...guessHistory, guess]);
         }}
+        isGameOver={isGameOver}
       />
     </>
   );
