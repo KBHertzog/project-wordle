@@ -1,6 +1,8 @@
 import React from "react";
 
-function GuessInput({ onGuess, isGameOver }) {
+const alphabet = [..."QWERTYUIOPASDFGHJKLZXCVBNM"];
+
+function GuessInput({ onGuess, isGameOver, answer }) {
   const [currentGuess, setCurrentGuess] = React.useState("");
   return (
     <form
@@ -20,6 +22,30 @@ function GuessInput({ onGuess, isGameOver }) {
         pattern="\w{5,5}"
         disabled={isGameOver}
       />
+      <div className="letter-buttons-wrapper">
+        {alphabet.map((letter) => {
+          const letterInAnswer = answer.includes(letter);
+          return (
+            <button
+              key={letter}
+              className="letter-button"
+              type="button"
+              onClick={() => {
+                if (currentGuess.length < 5) {
+                  setCurrentGuess(currentGuess + letter);
+                  if (currentGuess.length + 1 === 5) {
+                    onGuess(currentGuess + letter);
+                    setCurrentGuess("");
+                  }
+                }
+              }}
+              disabled={isGameOver}
+            >
+              {letter}
+            </button>
+          );
+        })}
+      </div>
     </form>
   );
 }
